@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <h1>Edit Todo</h1>
+        <form method="post" action="/todo/update/<%= index %>">
+            <input type="text" name="title" value="<%= onetodo.title %>">
+            <input type="text" name ="description" value="<%= onetodo.description  %>">
+            <button type="submit">Update Todo</button>
+        </form>
+</body>
+</html>

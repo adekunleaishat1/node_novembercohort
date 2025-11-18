@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo list</title>
+</head>
+<body>
+    <h1>Todo List</h1>
+        <form method="post" action="/addtodo">
+            <input type="text" name="title">
+            <input type="text" name ="description">
+            <button type="submit">Add Todo</button>
+        </form>
+   
+
+        <% alltodo.forEach((element,index ) => { %>
+           <h1><%= element.title %></h1>
+            <h1><%= element.description %></h1>
+            <form method="post" action="/deletetodo">
+                <input name="index" value="<%= index %>" type="text" hidden>
+                <button>delete</button>
+            </form>
+            <form method="get" action="/todo/edit/<%= index %>">
+                <button>Edit</button>
+            </form>
+        <% }) %>
+</body>
+</html>
