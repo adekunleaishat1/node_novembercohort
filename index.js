@@ -1,9 +1,20 @@
 const express = require("express")
 const app = express()
 require("ejs")
+require("dotenv").config()
+const mongoose = require("mongoose")
 
 app.set("view engine", "ejs")
 app.use(express.urlencoded({extended: true}))
+// CRUD - Create, Read, Update, Delete
+
+const userschema = mongoose.Schema({
+   username:String,
+   email:String,
+   password:String
+})
+
+const usermodel = mongoose.model("user_collection", userschema);
 
 let userarray = []
 let alltodo = []
@@ -42,18 +53,23 @@ app.get("/todo/edit/:index",(req,res)=>{
   const onetodo = alltodo[index]
    res.render("edit",{onetodo, index})
 })
-app.post("/user/signup",(req, res)=>{
+
+app.post("/user/signup", async(req, res)=>{
  console.log(req.body);
  const {username, email, password} = req.body
  if (!username || !email || !password) {
    res.send("All fields are required")
    
  }else{
-  userarray.push(req.body)
-  console.log(userarray);
+ const newuser = await usermodel.create(req.body)
+ console.log(newuser);
+ 
+ if (newuser) {
   res.redirect("/login") 
  }
- 
+  
+ }
+
 })
 
 app.post("/user/login",(req, res)=>{
@@ -95,6 +111,26 @@ app.post("/todo/update/:index",(req, res)=>{
    res.redirect("/todo")
 })
 
+
+
+const uri = process.env.MONGOURI
+const Connect = async() =>{
+  try {
+   const connection = await mongoose.connect(uri)
+   if (connection) {
+    console.log("Database connected successfully");
+    
+   }
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+Connect()
+
+
+
+
 const port = 5007
 
 app.listen(port,()=>{
@@ -102,46 +138,3 @@ app.listen(port,()=>{
  
 })
 
-
-// const express = require("express")
-//  const app =  express()
-
-
-// app.get("/",(Request, Response)=>{
-//   // Response.send("Hello World")
-//   console.log(__dirname);
-  
-//   Response.sendFile(__dirname + "/index.html")
-// })
-
-// app.get("/user", (req, res)=>{
-//     res.json({
-//       "users":[
-//             {name: "Rachel", age: 17, city: "Newzealand"},
-//             {name: "Titilayo", age: 18, city: "New York"},
-//             {name: "Hameed", age: 15, city: "Nigeria"},
-//             {name: "Temmy", age: 18, city: "Canada"},
-//             {name: "Habeeb", age: 19, city: "Ghana"},
-//             {name: "Feranmi", age: 18, city: "Nigeria"},
-//         ]
-//     })
-// })
-
-
-//  const Port = 5007
-//  app.listen(Port,()=>{
-//   console.log(`App started at port ${Port}`);
-  
-//  })
-
-// // const username = "NovemberCohort";
-// // console.log(`Welcome to the ${username} Node.js course!`);
-
-// // let userarray = ["Alice", "Bob", "Charlie"];
-// // function greetUsers() {
-// //   userarray.push("David");
-// //   console.log(userarray);
-  
-// // }
-
-// // greetUsers();
